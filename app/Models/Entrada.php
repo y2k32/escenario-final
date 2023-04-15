@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserCode extends Model
+class Entrada extends Model
 {
     use HasFactory;
 
-    public $table = "user_codes";
-  
     protected $fillable = [
-        'user_id',
-        'rol',
-        'code',
-        'encrypt_code',
-        'appcode',
-        'encrypt_appcode',
+        'Produc_id',
+        'Cantidad',
+        'Total',
     ];
 }

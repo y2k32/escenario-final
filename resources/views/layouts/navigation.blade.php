@@ -24,9 +24,9 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             @auth
-                                <div>{{ Auth::user()->name }}</div>
+                            <div>{{ Auth::user()->name }}</div>
                             @else
-                                <div>{{ Auth::guard('admin')->user()->name }}</div>
+                            <div>{{ Auth::guard('admin')->user()->name }}</div>
                             @endauth
 
                             <div class="ml-1">
@@ -38,24 +38,52 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <!-- <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
-                        </x-dropdown-link>
+                        </x-dropdown-link> -->
                         @auth
                         <!-- Cruds -->
-                            @if(Auth::user()->rol == 1)
-                            <x-dropdown-link :href="route('register')">
-                                {{ __('Register') }}
-                            </x-dropdown-link>
-                            @endif
+                        @if(Auth::user()->rol == 1 || Auth::user()->rol == 2)
+                        <x-dropdown-link :href="route('gen_code')">
+                            {{ __('Generar codigo de Autorización') }}
+                        </x-dropdown-link>
+                        @endif
+                        @if(Auth::user()->rol == 1)
+                        <x-dropdown-link :href="route('register')">
+                            {{ __('Registro de Usuarios') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('all.users')">
+                            {{ __('Control de Usuarios') }}
+                        </x-dropdown-link>
+                        @endif
+                        <!-- Productos -->
+                        <x-dropdown-link :href="route('products')">
+                            {{ __('Registro de Productos') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('all.products')">
+                            {{ __('Control de Productos') }}
+                        </x-dropdown-link>
+                        <!-- Entradas -->
+                        <x-dropdown-link :href="route('entradas')">
+                            {{ __('Registro de Entradas') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('all.entradas')">
+                            {{ __('Control de Entradas') }}
+                        </x-dropdown-link>
+                        <!-- Salidas -->
+                        <x-dropdown-link :href="route('salidas')">
+                            {{ __('Registro de Salidas') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('all.salidas')">
+                            {{ __('Control de Salidas') }}
+                        </x-dropdown-link>
                         @endauth
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
+                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
@@ -87,31 +115,62 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
-            @auth
+                @auth
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            @else
+                @else
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::guard('admin')->user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::guard('admin')->user()->email }}</div>
-            @endauth
+                @endauth
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
+                <!-- <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> -->
                 <!-- Cruds -->
-                @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
-                            @endif
-                
+                @auth
+                @if(Auth::user()->rol == 1 || Auth::user()->rol == 2)
+                <x-dropdown-link :href="route('gen_code')">
+                    {{ __('Generar codigo de Autorización') }}
+                </x-dropdown-link>
+                @endif
+                @if(Auth::user()->rol == 1)
+                <x-dropdown-link :href="route('register')">
+                    {{ __('Registro de Usuarios') }}
+                </x-dropdown-link>
+                <x-dropdown-link :href="route('all.users')">
+                    {{ __('Control de Usuarios') }}
+                </x-dropdown-link>
+                @endif
+                <!-- Productos -->
+                <x-dropdown-link :href="route('products')">
+                    {{ __('Registro de Productos') }}
+                </x-dropdown-link>
+                <x-dropdown-link :href="route('all.products')">
+                    {{ __('Control de Productos') }}
+                </x-dropdown-link>
+                <!-- Entradas -->
+                <x-dropdown-link :href="route('entradas')">
+                    {{ __('Registro de Entradas') }}
+                </x-dropdown-link>
+                <x-dropdown-link :href="route('all.entradas')">
+                    {{ __('Control de Entradas') }}
+                </x-dropdown-link>
+                <!-- Salidas -->
+                <x-dropdown-link :href="route('salidas')">
+                    {{ __('Registro de Salidas') }}
+                </x-dropdown-link>
+                <x-dropdown-link :href="route('all.salidas')">
+                    {{ __('Control de Salidas') }}
+                </x-dropdown-link>
+                @endauth
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
+                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>

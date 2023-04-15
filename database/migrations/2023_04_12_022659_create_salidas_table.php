@@ -13,15 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('user_codes', function (Blueprint $table) {
+        Schema::create('salidas', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->reference('id')->on('users');
-            $table->integer('rol')->nullable();
-            $table->string('code')->nullable();
-            $table->string('encrypt_code')->nullable();
-            $table->string('appcode')->nullable();
-            $table->string('encrypt_appcode')->nullable();
+            $table->integer('Produc_id')->reference('id')->on('productos');
+            $table->double('Cantidad', 9, 3);
+            $table->decimal('Total', 9, 3);
             $table->timestamps();
         });
     }
@@ -33,7 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
-        Schema::dropIfExists('user_codes');
+        Schema::dropIfExists('salidas');
     }
 };

@@ -2,7 +2,8 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('v_code') }}">
+    <!-- <form method="POST" action="{{ route('v_code') }}"> -->
+    <form method="POST" action="{{ route('v_code2') }}">
         @csrf
         <!-- Remember Me -->
         <div class="block mt-4">

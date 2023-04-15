@@ -1,6 +1,9 @@
+<x-app-layout>
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
+        <x-success-message class="mb-4" :errors="$errors"></x-success-message>
+        <x-auth-validation-errors class="mb-4" :errors="$errors"></x-success-message>
 
         <!-- Name -->
         <div>
@@ -15,6 +18,8 @@
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
+
+        
 
         <!-- Password -->
         <div class="mt-4">
@@ -52,6 +57,17 @@
             <x-input-error :messages="$errors->get('user_role')" class="mt-2" />
         </div>
 
+        <!-- Select Status -->
+        <!-- <div class="mt-4">
+            <x-input-label for="status" :value="__('Status')" />
+            <select class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" id="status" aria-label="Default select example" name="status" required="required">
+                <option selected>Select Status...</option>
+                <option value="A" >Alta</option>
+                <option value="B" >Baja</option>
+            </select>
+            <x-input-error :messages="$errors->get('status')" class="mt-2" />
+        </div> -->
+
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
@@ -63,3 +79,4 @@
         </div>
     </form>
 </x-guest-layout>
+</x-app-layout>

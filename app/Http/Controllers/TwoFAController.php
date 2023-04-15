@@ -49,7 +49,7 @@ class TwoFAController extends Controller
                 $code_gen->save();
         
                 $signed_url = URL::temporarySignedRoute(
-                    'show_code', now()->addMinutes(5), Auth::user()->id
+                    'show_code', now()->addMinutes(15), Auth::user()->id
                 );
                 $mail= new SendMail($signed_url);
                 //dd(Auth::guard('admin')->user()->email); estos si regresa algo
@@ -57,8 +57,11 @@ class TwoFAController extends Controller
 
                 //$get_email = debe ser un email valido y existente o dara error;
                 /*Auth::user()->email*/
-                Mail::to('aguirrealex449@gmail.com')
+                $get_email = Auth::user()->email;
+                //dd($get_email);
+                Mail::to($get_email)
                     ->send($mail);
+                //dd($get_email);
                 return view('codes.checkcode');
             }
             
@@ -90,6 +93,29 @@ class TwoFAController extends Controller
         }
     }
 
+    public function ckeckCodeWebDos(Request $request)
+    {
+        $login_code = $request->input('login_code');
+        $user_codes = UserCode::where('user_id', Auth::user()->id)
+            ->where('code', "!=", "")
+            ->get();
+        //dd($user_codes); si tiene datos
+        
+        foreach ($user_codes as $codes) {
+            // dd($codes->code, $login_code);
+            if(Hash::check($login_code, $codes->code)){
+                $up_code = UserCode::find($codes->id);
+                //dd($up_code);
+                $up_code->code = "";
+                $up_code->encrypt_code = "";
+                $up_code->save();
+                Session::put('code', $codes->code);
+                return redirect('dashboard');
+            }
+        }
+        return view('codes.checkcode');
+    }
+
     public function ckeckCodeWeb(Request $request)
     {
         $login_code = $request->input('login_code');
@@ -98,10 +124,10 @@ class TwoFAController extends Controller
             ->get();
         foreach ($user_codes as $codes) {
             if(Hash::check($login_code, $codes->login_code)){
-                $trust_code = User::find($codes->id);
-                $trust_code->code = "";
-                $trust_code->encrypt_code = "";
-                $trust_code->save();
+                $up_code = User::find($codes->id);
+                $up_code->code = "";
+                $up_code->encrypt_code = "";
+                $up_code->save();
                 Session::put('code', $codes->login_code);
                 return redirect('dashboard');
             }

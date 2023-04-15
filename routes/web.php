@@ -87,6 +87,9 @@ Route::get('/has/code', [TwoFAController::class, 'store'])->name('has_code');
 Route::get('/code', [TwoFAController::class, 'show'])->middleware('signed')->name('show_code');
 
 // Ruta usada para validar el codigo recivido 
+Route::post('/check/code/dos', [TwoFAController::class, 'ckeckCodeWebDos'])->name('v_code2');
+
+// Ruta usada para validar el codigo recivido 
 Route::post('/check/code', [TwoFAController::class, 'ckeckCodeWeb'])->name('v_code');
 
 

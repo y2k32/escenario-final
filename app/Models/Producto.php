@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserCode extends Model
+class Producto extends Model
 {
     use HasFactory;
 
-    public $table = "user_codes";
-  
     protected $fillable = [
-        'user_id',
-        'rol',
-        'code',
-        'encrypt_code',
-        'appcode',
-        'encrypt_appcode',
+        'Nombre',
+        'Existencias',
+        'Precio',
+        'PrecioCompra',
+        'Codigo',
+        'Status',
     ];
 }

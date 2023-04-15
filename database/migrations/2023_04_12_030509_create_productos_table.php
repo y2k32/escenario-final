@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('user_codes', function (Blueprint $table) {
+        Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->reference('id')->on('users');
-            $table->integer('rol')->nullable();
-            $table->string('code')->nullable();
-            $table->string('encrypt_code')->nullable();
-            $table->string('appcode')->nullable();
-            $table->string('encrypt_appcode')->nullable();
+            $table->string('Nombre');
+            $table->double('Existencias', 9, 3);
+            $table->decimal('Precio', 9, 3);
+            $table->decimal('PrecioCompra', 9, 3);
+            $table->string('Codigo');
+            $table->string('Status');
             $table->timestamps();
         });
     }
@@ -33,7 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
-        Schema::dropIfExists('user_codes');
+        Schema::dropIfExists('productos');
     }
 };

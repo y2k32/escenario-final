@@ -6,6 +6,7 @@ use App\Http\Controllers\TwoFAController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Middleware\HasCode;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,11 +90,18 @@ Route::get('/code', [TwoFAController::class, 'show'])->middleware('signed')->nam
 // Ruta usada para validar el codigo recivido 
 Route::post('/check/code/dos', [TwoFAController::class, 'ckeckCodeWebDos'])->name('v_code2');
 
+// Ruta usada para validar el codigo qr
+Route::post('/check/code/tres', [TwoFAController::class, 'ckeckCodeWebDos'])->name('v_code2');
+
 // Ruta usada para validar el codigo recivido 
 Route::post('/check/code', [TwoFAController::class, 'ckeckCodeWeb'])->name('v_code');
 
+//Route::get('/verificate/qrcode', [QrCodeController::class, 'qr_verified'])->name('qr_verificated'); // Esta ruta es la que valida el codigo web
 
 
+
+// Ruta en la que el qr se da por valido y se genera la sesion
+Route::get('/verificated/qrcode', [TwoFAController::class, 'verificated_qr'])->name('verificated_qr');
 
 //Route::middleware(['auth','Has_Code'])->group(function () {
 Route::middleware(['auth','has_code'])->group(function () {

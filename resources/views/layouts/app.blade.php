@@ -14,11 +14,11 @@
         <!-- Scripts -->
         <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script type="module">
+        <!-- <script type="module">
             Echo.channel('home').listen('.NewMessage',(e) => {
                 console.log(e.message);
             });
-        </script>
+        </script> -->
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">

@@ -22,3 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Aqui se pueden agregar por separado las rutas que no seran consultadas desde un navegador web
 // O que su proposito original no es ese, por ej aqui va la ruta a la que se conecta al cel
 Route::post('/check/app/code', [TwoFAController::class, 'ckeckCodeApp']);
+
+
+// Muestra el QR que contiene una ruta firmada
+Route::post('/verifying/qrcode', [TwoFAController::class, 'verifying_qr'])->name('verifying_qr');
+// Ayuda a generar la ruta firmada para qr movil
+Route::get('/check/app/qrcode', [TwoFAController::class, 'ckeckCodeApp2'])->middleware('signed')->name('get_qrcode');
+
+//Route::post('/verificate/qrcode', [TwoFAController::class, 'verificateQr'])->name('verificateQr');

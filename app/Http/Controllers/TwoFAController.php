@@ -225,9 +225,9 @@ class TwoFAController extends Controller
         $get_email = "";
         $encypt_key = env('CRYPT_KEY');
         $app_code = $request->header('application_code');
-        dd($app_code);
+        //dd($app_code);
         $user_codes = UserCode::where('appcode', "!=", "")->where('rol','=',1)->get();
-        dd($user_codes);
+        //dd($user_codes);
         foreach ($user_codes as $codes) {
             if(Hash::check($app_code, $codes->appcode)){
                 return response()->json([
@@ -239,5 +239,18 @@ class TwoFAController extends Controller
             'response'=> "invalid Code"
         ], 406);
     }
-
+    // Metodos movil app
+    public function loginapp(Request $request){
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $user = User::where("email", $email)->first();
+        if(Hash::check($password, $user->password)){
+            return response()->json([
+                'response'=> "yes"
+            ],201);
+        }
+        return response()->json([
+            'response'=> "Error Login"
+        ], 406);
+    }
 }

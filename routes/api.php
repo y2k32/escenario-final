@@ -30,3 +30,10 @@ Route::post('/verifying/qrcode', [TwoFAController::class, 'verifying_qr'])->name
 Route::get('/check/app/qrcode', [TwoFAController::class, 'ckeckCodeApp2'])->middleware('signed')->name('get_qrcode');
 
 //Route::post('/verificate/qrcode', [TwoFAController::class, 'verificateQr'])->name('verificateQr');
+
+// Rutas movile
+// Login
+Route::post('/app/login', [TwoFAController::class, 'loginapp'])->name('login_app');
+
+
+

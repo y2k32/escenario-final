@@ -29,6 +29,9 @@ Route::post('/verifying/qrcode', [TwoFAController::class, 'verifying_qr'])->name
 // Ayuda a generar la ruta firmada para qr movil
 Route::get('/check/app/qrcode', [TwoFAController::class, 'ckeckCodeApp2'])->middleware('signed')->name('get_qrcode');
 
+// Genera codigos de autorizacion desde android
+Route::post('/app/gen/code', [TwoFAController::class, 'genCodeAuth'])->name('gen_qrcode');
+
 //Route::post('/verificate/qrcode', [TwoFAController::class, 'verificateQr'])->name('verificateQr');
 
 // Rutas movile

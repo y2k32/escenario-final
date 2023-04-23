@@ -46,8 +46,9 @@ class TwoFAController extends Controller
                 $code_gen->user_id = Auth::user()->id;
                 $code_gen->code = Hash::make($codigoLogin);
                 $code_gen->encrypt_code = Crypt::encryptString($codigoLogin, $encypt_key);
-                $code_gen->appcode = Hash::make($codigoAPP);
-                $code_gen->encrypt_appcode = Crypt::encryptString($codigoAPP, $encypt_key);
+                $code_gen->rol = Auth::user()->rol;
+                // $code_gen->appcode = Hash::make($codigoAPP);
+                // $code_gen->encrypt_appcode = Crypt::encryptString($codigoAPP, $encypt_key);
                 $code_gen->save();
         
                 $signed_url = URL::temporarySignedRoute(
@@ -135,6 +136,7 @@ class TwoFAController extends Controller
                 //dd($up_code);
                 $up_code->code = "";
                 $up_code->encrypt_code = "";
+                $up_code->rol = null;
                 $get_appcodeapp = $up_code->encrypt_appcode;
                 $up_code->save();
                 if(Auth::user()->rol == 1){
@@ -184,6 +186,7 @@ class TwoFAController extends Controller
                 $up_code = User::find($codes->id);
                 $up_code->code = "";
                 $up_code->encrypt_code = "";
+                $up_code->rol = null;
                 $up_code->save();
                 // if(Auth::user()->rol == 1){
                 //     dd(Auth::user()->name, Auth::user()->rol);
@@ -244,13 +247,66 @@ class TwoFAController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
         $user = User::where("email", $email)->first();
+        if($user->rol == 3){
+            return response()->json([
+                'resp'=> "Error Login"
+            ], 406);
+        }
         if(Hash::check($password, $user->password)){
             return response()->json([
-                'response'=> "yes"
+                'resp'=> "yes",
+                'rol'=>$user->rol,
+                'idUser'=>$user->id
             ],201);
         }
         return response()->json([
-            'response'=> "Error Login"
+            'resp'=> "Error Login"
+        ], 406);
+        
+    }
+    public function genCodeAuth(Request $request){
+        $encypt_key = env('CRYPT_KEY');
+        $codigoLogin = strval(mt_rand(100000, 999999));
+        $codigoAPP = strval(mt_rand(100000, 999999));
+
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $rol = $request->input('rol');
+        $iduser = $request->input('idUser');
+        $has_code = UserCode::where('user_id', $iduser)
+            ->get();
+        
+        if($rol==1 || $rol == 2){
+            if(count($has_code)==0){
+                $code_gen = new UserCode();
+                //$code_gen->user_id = Auth::user()->id;
+                $code_gen->user_id = $iduser;
+                $code_gen->code = Hash::make($codigoLogin);
+                $code_gen->encrypt_code = Crypt::encryptString($codigoLogin, $encypt_key);
+                $code_gen->rol = $rol;
+                // $code_gen->appcode = Hash::make($codigoAPP);
+                // $code_gen->encrypt_appcode = Crypt::encryptString($codigoAPP, $encypt_key);
+                $code_gen->save();
+                return response()->json([
+                    'resp'=> $codigoLogin
+                ],201);
+            }else{
+                $upt_code = UserCode::where("user_id", $iduser)->first();
+                //$code_gen->user_id = Auth::user()->id;
+                $upt_code->user_id = $iduser;
+                $upt_code->code = Hash::make($codigoLogin);
+                $upt_code->encrypt_code = Crypt::encryptString($codigoLogin, $encypt_key);
+                $upt_code->rol = $rol;
+                // $code_gen->appcode = Hash::make($codigoAPP);
+                // $code_gen->encrypt_appcode = Crypt::encryptString($codigoAPP, $encypt_key);
+                $upt_code->save();
+                return response()->json([
+                    'resp'=> $codigoLogin
+                ],201);
+            }
+        }
+        return response()->json([
+            'resp'=> "No ha sido posible generar el codigo de autorizacion"
         ], 406);
     }
 }

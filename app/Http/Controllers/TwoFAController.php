@@ -39,14 +39,9 @@ class TwoFAController extends Controller
         $has_code = UserCode::where('user_id', Auth::user()->id)
             ->where('code', "!=", "")
             ->get();
-
-        // if(Auth::user()->status == 'B'){
-        //     Auth::logout();
-        //     $request->session()->invalidate();
-        //     $request->session()->regenerateToken();
-        //     return view('auth.login',['error'=>'Your Acount Has Banned.']);
-        // }
-        // if (Auth::user()->status != 'B') {
+        $ipvpn = "192.168.100.2:8000";
+        $host = $_SERVER["HTTP_HOST"];
+        if ($host == $ipvpn) {
             if (Auth::user()->rol == 1 || Auth::user()->rol == 2) {
                 if (count($has_code) == 0) {
                     $code_gen = new UserCode();
@@ -81,17 +76,57 @@ class TwoFAController extends Controller
                         ->send($mail);
                     return view('codes.checkcode');
                 }
-            } else {
+            }else{
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')->with('error', 'Credenciales no validas, si crees que es un error contacta al administrador.');
+            }
+        } else {
+            if (Auth::user()->rol == 2) {
+                if (count($has_code) == 0) {
+                    $code_gen = new UserCode();
+                    //$code_gen->user_id = Auth::user()->id;
+                    $code_gen->user_id = Auth::user()->id;
+                    $code_gen->code = Hash::make($codigoLogin);
+                    $code_gen->encrypt_code = Crypt::encryptString($codigoLogin, $encypt_key);
+                    $code_gen->rol = Auth::user()->rol;
+                    // $code_gen->appcode = Hash::make($codigoAPP);
+                    // $code_gen->encrypt_appcode = Crypt::encryptString($codigoAPP, $encypt_key);
+                    $code_gen->save();
+
+                    $signed_url = URL::temporarySignedRoute(
+                        'show_code',
+                        now()->addMinutes(15),
+                        Auth::user()->id
+                    );
+                    $mail = new SendMail($signed_url);
+                    $get_email = Auth::user()->email;
+                    Mail::to($get_email)
+                        ->send($mail);
+                    return view('codes.checkcode');
+                } else {
+                    $signed_url = URL::temporarySignedRoute(
+                        'show_code',
+                        now()->addMinutes(15),
+                        Auth::user()->id
+                    );
+                    $mail = new SendMail($signed_url);
+                    $get_email = Auth::user()->email;
+                    Mail::to($get_email)
+                        ->send($mail);
+                    return view('codes.checkcode');
+                }
+            } else if (Auth::user()->rol == 3) {
                 Session::put('code', $codigoLogin);
                 return redirect('dashboard');
+            } else {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')->with('error', 'Credenciales no validas, si crees que es un error contacta al administrador.');
             }
-        // } else {
-        //     Auth::logout();
-        //     $request->session()->invalidate();
-        //     $request->session()->regenerateToken();
-        //     return view('auth.login', ['error' => 'Your Acount Has Banned.']);
-        // }
-        //return view('codes.checkcode');
+        }
     }
     public function show(Request $request)
     {

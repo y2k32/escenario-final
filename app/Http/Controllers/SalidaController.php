@@ -23,6 +23,10 @@ class SalidaController extends Controller
     }
     public function store(Request $request)
     { 
+        $products = Producto::where('id', $request->input('sl_product'))->first();
+        $products->Existencias = ($products->Existencias-$request->input('cantidad'));
+        $products->save();
+
         $new_entrada = new Salida();
         $new_entrada->Produc_id=$request->input('sl_product');
         $new_entrada->Cantidad=$request->input('cantidad');
@@ -39,6 +43,10 @@ class SalidaController extends Controller
     }
     public function edit(Request $request)
     { 
+        $products = Producto::where('id', $request->input('sl_product'))->first();
+        $products->Existencias = ($products->Existencias-$request->input('cantidad'));
+        
+
         $salida = Salida::where('id', $request->input('id'))->first();
         $salida->Produc_id=$request->input('sl_product');
         $salida->Cantidad=$request->input('cantidad');
@@ -58,6 +66,7 @@ class SalidaController extends Controller
                         $up_code->encrypt_code = "";
                         $up_code->save();
                         $salida->save();
+                        $products->save();
                         return redirect()->route("show.salida",[$salida->id])->with("success","¡Salida actualizada con éxito!");
                     }
                 }

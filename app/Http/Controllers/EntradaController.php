@@ -23,6 +23,9 @@ class EntradaController extends Controller
     }
     public function store(Request $request)
     { 
+        $products = Producto::where('id', $request->input('sl_product'))->first();
+        $products->Existencias = ($products->Existencias+$request->input('cantidad'));
+        $products->save();
         $new_entrada = new Entrada();
         $new_entrada->Produc_id=$request->input('sl_product');
         $new_entrada->Cantidad=$request->input('cantidad');
@@ -39,6 +42,10 @@ class EntradaController extends Controller
     }
     public function edit(Request $request)
     { 
+        $products = Producto::where('id', $request->input('sl_product'))->first();
+        $products->Existencias = ($products->Existencias+$request->input('cantidad'));
+        
+
         $entrada = Entrada::where('id', $request->input('id'))->first();
         $entrada->Produc_id=$request->input('sl_product');
         $entrada->Cantidad=$request->input('cantidad');
@@ -58,6 +65,7 @@ class EntradaController extends Controller
                         $up_code->encrypt_code = "";
                         $up_code->save();
                         $entrada->save();
+                        $products->save();
                         return redirect()->route("show.entrada",[$entrada->id])->with("success","¡Entrada actualizada con éxito!");
                     }
                 }

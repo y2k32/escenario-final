@@ -12,7 +12,7 @@
     </div>
     <div class="alert-content ml-4">
         <div class="alert-title font-semibold text-lg text-green-800">
-            {{ __('Success') }}
+            {{ __('Operación Completada') }}
         </div>
         <div class="alert-description text-sm text-green-600">
             {{ session('success') }}
@@ -33,7 +33,7 @@
         </div>
         <div class="alert-content ml-4">
             <div class="alert-title font-semibold text-lg text-red-800">
-                {{ __('Whoops, something went wrong') }}
+                {{ __('Whoops, ha ocurrido un error') }}
             </div>
             <div class="alert-description text-sm text-red-600">
                 {{ session('error') }}

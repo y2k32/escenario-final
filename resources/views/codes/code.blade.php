@@ -5,7 +5,7 @@
             <span class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Este es tu codigo de verificación.</span>
         </label>
         <br><br>
-        <p class="font-semibold text-x2 text-gray-800 dark:text-gray-200 leading-tight">Debes ingresar este codigo en la app movil de acceso al sistema.</p>
+        <p class="font-semibold text-x2 text-gray-800 dark:text-gray-200 leading-tight">Debes ingresar este codigo en la app web de acceso al sistema.</p>
         <br>
     </div>
 

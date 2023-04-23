@@ -1,4 +1,5 @@
 <x-guest-layout>
+<x-success-message class="mb-4" :errors="$errors"></x-success-message>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

@@ -26,8 +26,18 @@ class ProductoController extends Controller
     }
     public function store(Request $request)
     { 
-        //dd($request); si llegan los datos del request
         $new_product = new Producto();
+        //dd($request);
+        //dd($request); si llegan los datos del request
+        //dd($request->hasFile('imgp'));
+        if($request->hasFile('imgp')){
+            $file = $request->file('imgp');
+            //dd($file);
+            $finalPath = 'img/';
+            $filename = time() . '-' .$file->getClientOriginalName();
+            $uploadFile = $request->file('imgp')->move($finalPath, $filename);
+            $new_product->Img = $finalPath.$filename;
+        }
         $new_product->Nombre=$request->input('nombre');
         $new_product->Existencias=$request->input('existencia');
         $new_product->Precio=$request->input('precio');

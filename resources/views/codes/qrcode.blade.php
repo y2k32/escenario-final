@@ -33,8 +33,5 @@
             </label>
             <br><br>
             <br><br>
-            <label for="remember_me" class="inline-flex items-center">
-            <span class="font-semibold  text-gray-800 dark:text-gray-200 leading-tight" style="font-size: 8px;">{{ $user }}</span>
-            </label>
         </div>
 </x-guest-layout>

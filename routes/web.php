@@ -7,7 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Middleware\HasCode;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
+use App\Models\Producto;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,7 +70,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $products = Producto::where("Status","A")->get();
+    return view('dashboard',compact('products'));
     // EN el user normal ya no checare si tiene un codigo has_code
     // o no para entrar al dashboard porque no necesita mas que
     // su email y password
@@ -79,7 +80,8 @@ Route::get('/dashboard', function () {
 
 // Cheque si el usuario tiene un codigo y si no lo crea
 // ademas crea la ruta firmada y envia el email
-Route::get('/has/code', [TwoFAController::class, 'store'])->name('has_code');
+Route::get('/has/code', [TwoFAController::class, 'store'])
+    ->middleware('has_access')->name('has_code');
 // Route::get('/checkcode', function(){
 //     return view('codes.checkcode');
 // })->name('ch_code');

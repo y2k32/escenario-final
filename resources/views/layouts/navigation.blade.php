@@ -60,9 +60,6 @@
                         <x-dropdown-link :href="route('products')">
                             {{ __('Registro de Productos') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('all.products')">
-                            {{ __('Control de Productos') }}
-                        </x-dropdown-link>
                         <!-- Entradas -->
                         <x-dropdown-link :href="route('entradas')">
                             {{ __('Registro de Entradas') }}
@@ -146,9 +143,6 @@
                 <!-- Productos -->
                 <x-dropdown-link :href="route('products')">
                     {{ __('Registro de Productos') }}
-                </x-dropdown-link>
-                <x-dropdown-link :href="route('all.products')">
-                    {{ __('Control de Productos') }}
                 </x-dropdown-link>
                 <!-- Entradas -->
                 <x-dropdown-link :href="route('entradas')">

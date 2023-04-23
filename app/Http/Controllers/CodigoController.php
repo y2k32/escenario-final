@@ -25,7 +25,6 @@ class CodigoController extends Controller
         // A qui se genera el codigo, pero ocupamos el id del usuario que lo generara
         // pendiente ver con keneth los sockets
         $has_code = UserCode::where('user_id', Auth::user()->id)
-            ->where('code', "!=","")
             ->get();
         if(Auth::user()->rol == 1 || Auth::user()->rol == 2){
             if(count($has_code)==0){
@@ -44,6 +43,18 @@ class CodigoController extends Controller
                 // return URL::signedRoute('protected-route', ['user' => 1]);
                 // return view('codes.checkcode');
                 return redirect($signed_url);//URL::temporarySignedRoute('show_code_v', now()->addMinutes(15), Auth::user()->id);
+            }else {
+                $upt_code = UserCode::where("user_id", Auth::user()->id)->first();
+                $upt_code->code = Hash::make($codigoauto);
+                $upt_code->encrypt_code = Crypt::encryptString($codigoauto, $encypt_key);
+                $upt_code->rol = Auth::user()->rol;
+                // $code_gen->appcode = Hash::make($codigoAPP);
+                // $code_gen->encrypt_appcode = Crypt::encryptString($codigoAPP, $encypt_key);
+                $upt_code->save();
+                $signed_url = URL::temporarySignedRoute(
+                    'show_code_v', now()->addMinutes(15), Auth::user()->id
+                );
+                return redirect($signed_url);
             }
             
         }

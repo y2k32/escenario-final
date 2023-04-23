@@ -3,7 +3,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <form method="POST" action="{{ route('register.product') }}">
+                <form method="POST" action="{{ route('register.product') }}" enctype="multipart/form-data">
                     @csrf
 
                     <x-success-message class="mb-4" :errors="$errors"></x-success-message>
@@ -41,6 +41,13 @@
                         <x-input-label for="codigo" :value="__('Código')" />
                         <x-text-input id="codigo" class="block mt-1 w-full" type="text" name="codigo" :value="old('codigo')" required autocomplete="codigo" />
                         <x-input-error :messages="$errors->get('codigo')" class="mt-2" />
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="mt-4">
+                        <x-input-label for="imgp" :value="__('Imagen')" />
+                        <x-text-input id="imgp" class="block mt-1 w-full" type="file" name="imgp" :value="old('imgp')" required autocomplete="imgp" />
+                        <x-input-error :messages="$errors->get('imgp')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">

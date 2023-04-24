@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TwoFAController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DigitalOceanController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Middleware\HasCode;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -64,6 +65,8 @@ Route::prefix('supervisor')->group(function(){
 |--------------------------------------------------------------------------
 |
 */
+//Route::post('/digitalocean/store', [DigitalOceanController::class, 'store'])->name('digitalocean.store');
+
 
 Route::get('/', function () {
     return view('welcome');

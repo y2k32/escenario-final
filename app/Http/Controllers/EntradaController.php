@@ -30,8 +30,10 @@ class EntradaController extends Controller
         $new_entrada->Produc_id=$request->input('sl_product');
         $new_entrada->Cantidad=$request->input('cantidad');
         $new_entrada->Total=$request->input('total');
-        $new_entrada->save();
-        return redirect()->route("entradas")->with("success","¡Entrada generada con éxito!");
+        if($new_entrada->save()){
+            return redirect()->route("entradas")->with("success","¡Entrada generada con éxito!");
+        }
+        return redirect()->route("entradas")->with("success","Ha ocurrido un error al registrar la entrada!");
     }
     public function viewdata(Request $request, $id)
     { 
@@ -75,6 +77,7 @@ class EntradaController extends Controller
             $entrada->save();
             return redirect()->route("show.entrada",[$entrada->id])->with("success","¡Entrada actualizada con éxito!");
         }
+        return redirect()->route("show.entrada")->with("error","Ha ocurrido un error al actualizar la entrada!");
     }
     public function delete(Request $request)
     { 

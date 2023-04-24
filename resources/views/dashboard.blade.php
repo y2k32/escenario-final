@@ -11,6 +11,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="row">
+                    <x-success-message class="mb-4" :errors="$errors"></x-success-message>
                         @foreach ($products as $item)
                         <div class="col-lg-3 col-4 col-md-3 mt-3">
                             <div class="card">

@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Producto;
 use App\Models\UserCode;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
@@ -33,10 +33,16 @@ class ProductoController extends Controller
         if($request->hasFile('imgp')){
             $file = $request->file('imgp');
             //dd($file);
+            $disk = Storage::disk("do");
             $finalPath = 'img/';
             $filename = time() . '-' .$file->getClientOriginalName();
-            $uploadFile = $request->file('imgp')->move($finalPath, $filename);
-            $new_product->Img = $finalPath.$filename;
+            $realPath = $file->getRealPath();
+            $storage = Storage::disk("do")->put("/productos/img/".$filename, file_get_contents($realPath),'public');
+            
+            $urlp = Storage::disk('do')->url('/productos/img/'.$filename);
+            //$uploadFile = $request->file('imgp')->move($finalPath, $filename);
+            //$new_product->Img = $finalPath.$filename;
+            $new_product->Img = $urlp;
         }
         $new_product->Nombre=$request->input('nombre');
         $new_product->Existencias=$request->input('existencia');
@@ -63,6 +69,9 @@ class ProductoController extends Controller
     { 
         $actualiza = false;
         $products = Producto::where('id', $request->input('id'))->first();
+        if($products->Status=='B'){
+            $products->Status='A';
+        }
         $products->Nombre=$request->input('nombre');
         $products->Existencias=$request->input('existencia');
         $products->Precio=$request->input('precio');
@@ -123,5 +132,17 @@ class ProductoController extends Controller
             $products->save();
             return redirect()->route("show.product",[$products->id])->with("success","¡Producto actualizado con éxito!");
         }
+    }
+    public function prueba(Request	$request){
+        $image = $request->file('image');
+
+        if ($image) {
+            $filename = time() . '_' . $image->getClientOriginalName();
+            Storage::disk('do')->putFileAs('/', $image, $filename);
+
+            return redirect('/')->with('success', 'Imagen subida correctamente.');
+        }
+
+        return redirect('/')->with('error', 'Error al subir la imagen.');
     }
 }

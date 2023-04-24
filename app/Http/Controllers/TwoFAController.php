@@ -39,7 +39,7 @@ class TwoFAController extends Controller
         $has_code = UserCode::where('user_id', Auth::user()->id)
             ->where('code', "!=", "")
             ->get();
-        $ipvpn = "192.168.100.2:8000";
+        $ipvpn = env('IP_VPN');
         $host = $_SERVER["HTTP_HOST"];
         if ($host == $ipvpn) {
             if (Auth::user()->rol == 1 || Auth::user()->rol == 2) {

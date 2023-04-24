@@ -31,8 +31,10 @@ class SalidaController extends Controller
         $new_entrada->Produc_id=$request->input('sl_product');
         $new_entrada->Cantidad=$request->input('cantidad');
         $new_entrada->Total=$request->input('total');
-        $new_entrada->save();
-        return redirect()->route("salidas")->with("success","¡Salida generada con éxito!");
+        if($new_entrada->save()){
+            return redirect()->route("salidas")->with("success","¡Salida generada con éxito!");
+        }
+        return redirect()->route("salidas")->with("error","Ha ocurrido un error al registrar la salida!");
     }
     public function viewdata(Request $request, $id)
     { 
@@ -76,6 +78,7 @@ class SalidaController extends Controller
             $salida->save();
             return redirect()->route("show.salida",[$salida->id])->with("success","¡Salida actualizada con éxito!");
         }
+        return redirect()->route("show.salida")->with("error","Ha ocurrido un error al actualizar la salida!");
     }
     public function delete(Request $request)
     { 

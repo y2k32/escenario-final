@@ -44,7 +44,7 @@
                         @auth
                         <!-- Cruds -->
                         @if(Auth::user()->rol == 1 || Auth::user()->rol == 2)
-                        <x-dropdown-link :href="route('gen_code')">
+                        <x-dropdown-link :href="route('autorized.code')">
                             {{ __('Generar codigo de Autorización') }}
                         </x-dropdown-link>
                         @endif
@@ -132,7 +132,7 @@
                 <!-- Cruds -->
                 @auth
                 @if(Auth::user()->rol == 1 || Auth::user()->rol == 2)
-                <x-dropdown-link :href="route('gen_code')">
+                <x-dropdown-link :href="route('autorized.code')">
                     {{ __('Generar codigo de Autorización') }}
                 </x-dropdown-link>
                 @endif

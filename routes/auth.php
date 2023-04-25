@@ -68,9 +68,9 @@ Route::middleware('auth')->group(function () {
         ->name('entradas');
     Route::post('create/entrada', [EntradaController::class, 'store'])
         ->name('register.entrada');
-    Route::get('show/entrada/{id}', [EntradaController::class, 'viewdata'])
+    Route::get('show/entrada/{id}/{idp}', [EntradaController::class, 'viewdata'])
         ->name('show.entrada');
-    Route::post('show/entrada/{id}', [EntradaController::class, 'viewdata'])
+    Route::post('show/entrada/{id}/{idp}', [EntradaController::class, 'viewdata'])
         ->name('show.entrada');
     Route::post('edit/entrada', [EntradaController::class, 'edit'])
         ->name('update.entrada');
@@ -84,9 +84,9 @@ Route::middleware('auth')->group(function () {
         ->name('salidas');
     Route::post('create/salida', [SalidaController::class, 'store'])
         ->name('register.salida');
-    Route::get('show/salida/{id}', [SalidaController::class, 'viewdata'])
+    Route::get('show/salida/{id}/{idp}', [SalidaController::class, 'viewdata'])
         ->name('show.salida');
-    Route::post('show/salida/{id}', [SalidaController::class, 'viewdata'])
+    Route::post('show/salida/{id}/{idp}', [SalidaController::class, 'viewdata'])
         ->name('show.salida');
     Route::post('edit/salida', [SalidaController::class, 'edit'])
         ->name('update.salida');
@@ -105,6 +105,12 @@ Route::middleware('auth')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
     Route::post('register', [RegisteredUserController::class, 'store']);
+    
+    // ruta que muestra la pagina donde eligiremos un usuario al que le enviaremos el correo
+    Route::get('autorized/code', [CodigoController::class, 'CodeEmail'])
+                ->name('autorized.code');
+    Route::post('autorized/esc/code', [CodigoController::class, 'sendCodeEmail'])
+                ->name('send.code.email');        
 
     // Rutas para generar codigo de autorizacion
     Route::get('/genarate/code', [CodigoController::class, 'generate'])->name('gen_code');

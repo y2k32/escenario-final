@@ -78,6 +78,7 @@ class ProductoController extends Controller
         $products->PrecioCompra=$request->input('precio_p');
         $products->Codigo=$request->input('codigo');
         //$products->Status=$request->input('status');
+        
         if(Auth::user()->rol == 3){
             $codigo_v = $request->input('codigo_v');
             $has_code_v = UserCode::where('code', "!=","")
@@ -107,8 +108,17 @@ class ProductoController extends Controller
     public function delete(Request $request)
     { 
         $products = Producto::where('id', $request->input('id'))->first();
+        //dd($products); si encuentra el producto
+        //dd(Auth::user()->rol); si me detecta el error del usuario
+        // if(Auth::user()->rol == 3 || Auth::user()->rol == 2){
+        //     $mensaje = "Aqui no hay novedad";
+        //     dd($mensaje);
+        // }
+
+
         $products->Status='B';
-        if(Auth::user()->rol == 3 && Auth::user()->rol == 2){
+        if(Auth::user()->rol == 3 || Auth::user()->rol == 2){
+            //dd(Auth::user()->rol);
             $codigo_v = $request->input('codigo_v');
             $has_code_v = UserCode::where('code', "!=","")->where('rol',1)
             ->get();
@@ -123,14 +133,15 @@ class ProductoController extends Controller
                         $up_code->encrypt_code = "";
                         $up_code->save();
                         $products->save();
-                        return redirect()->route("show.product",[$products->id])->with("success","¡Producto actualizado con éxito!");
+                        return redirect()->route("showdel.product",[$products->id])->with("success","¡Producto actualizado con éxito!");
                     }
                 }
+            }else{
+                return redirect()->route("showdel.product",[$products->id])->with("error","¡Producto no actualizado, No tienes autorización!");
             }
-            return redirect()->route("show.product",[$products->id])->with("error","¡Producto no actualizado, No tienes autorización!");
         }else{
             $products->save();
-            return redirect()->route("show.product",[$products->id])->with("success","¡Producto actualizado con éxito!");
+            return redirect()->route("showdel.product",[$products->id])->with("success","¡Producto actualizado con éxito!");
         }
     }
     public function prueba(Request	$request){

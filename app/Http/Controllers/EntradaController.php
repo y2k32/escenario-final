@@ -13,12 +13,21 @@ class EntradaController extends Controller
 {
     //
     public function allentradas(Request $request){
-        $entradas = Entrada::all();
+        //$entradas = Entrada::all();
+        $entradas = Entrada::select(
+            "entradas.id",
+            "entradas.Produc_id",
+            "entradas.Cantidad",
+            "entradas.Total",
+            "productos.Nombre as Nombre"
+            )->join("productos","productos.id","=","entradas.Produc_id")
+                ->get();
+                //dd($entradas);
         return view('entradas.allentradas', compact('entradas'));
     }
     public function index(Request $request)
     { 
-        $products = Producto::all();
+        $products = Producto::where("Status","!=","B")->get();
         return view('entradas.entradas', compact('products'));
     }
     public function store(Request $request)
@@ -35,21 +44,36 @@ class EntradaController extends Controller
         }
         return redirect()->route("entradas")->with("success","Ha ocurrido un error al registrar la entrada!");
     }
-    public function viewdata(Request $request, $id)
+    public function viewdata(Request $request, $id, $idp)
     { 
         $entradas = Entrada::where('id', $id)->first();
-        $products = Producto::all();
+        $products = Producto::where("id",$idp)->first();
         //dd($get_product);
         return view('entradas.updatentradas', compact('entradas','products'));
     }
     public function edit(Request $request)
     { 
-        $products = Producto::where('id', $request->input('sl_product'))->first();
-        $products->Existencias = ($products->Existencias+$request->input('cantidad'));
-        
-
+        $msg = "True";
+        $msg2 = "False";
+        $idp = $request->input('idp');
+        $products = Producto::where('id', $request->input('idp'))->first();
+        //dd($products);
         $entrada = Entrada::where('id', $request->input('id'))->first();
-        $entrada->Produc_id=$request->input('sl_product');
+        //dd(floatval($products->Existencias)-floatval($entrada->Cantidad));
+        $resta = (floatval($products->Existencias)-floatval($entrada->Cantidad));
+        $suma = (floatval($resta)+floatval($request->input('cantidad')));
+        // $products->Existencias = 
+        // $products->Existencias = 
+        if(!is_null($products)){
+            $products->Existencias=floatval($suma);//Existencias=$suma;
+            $products->save();
+            //dd($msg);
+        }else{
+            //dd($msg2);
+        }
+        $products->Existencias=$suma;
+        $products->save();
+        $entrada->Produc_id=$request->input('idp');
         $entrada->Cantidad=$request->input('cantidad');
         $entrada->Total=$request->input('total');
         if(Auth::user()->rol == 3){
@@ -67,15 +91,17 @@ class EntradaController extends Controller
                         $up_code->encrypt_code = "";
                         $up_code->save();
                         $entrada->save();
-                        $products->save();
-                        return redirect()->route("show.entrada",[$entrada->id])->with("success","¡Entrada actualizada con éxito!");
+                        // $products->Existencias=$suma;
+                        // $products->save();
+                        return redirect()->route("show.entrada",["id"=>$entrada->id,"idp"=>$idp])->with("success","¡Entrada actualizada con éxito!");
                     }
                 }
             }
-            return redirect()->route("show.entrada",[$entrada->id])->with("error","¡Entrada no actualizada, No tienes autorización!");
+            return redirect()->route("show.entrada",["id"=>$entrada->id,"idp"=>$idp])->with("error","¡Entrada no actualizada, No tienes autorización!");
         }else{
+            $products->save();
             $entrada->save();
-            return redirect()->route("show.entrada",[$entrada->id])->with("success","¡Entrada actualizada con éxito!");
+            return redirect()->route("show.entrada",["id"=>$entrada->id,"idp"=>$idp])->with("success","¡Entrada actualizada con éxito!");
         }
         return redirect()->route("show.entrada")->with("error","Ha ocurrido un error al actualizar la entrada!");
     }

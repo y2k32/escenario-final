@@ -39,7 +39,8 @@ class TwoFAController extends Controller
         $has_code = UserCode::where('user_id', Auth::user()->id)
             ->where('code', "!=", "")
             ->get();
-        $ipvpn = env('IP_VPN');
+        $ipvpn = '192.168.100.2:8000';//env('IP_VPN');
+        //dd($ipvpn);
         $host = $_SERVER["HTTP_HOST"];
         if ($host == $ipvpn) {
             if (Auth::user()->rol == 1 || Auth::user()->rol == 2) {
@@ -223,7 +224,7 @@ class TwoFAController extends Controller
     }
     public function verificated_qr()
     {
-        $products = Producto::all();
+        $products = Producto::where("Status","A")->get();
         Session::put('code', 20000);
         Session::put('qr_code', true);
         return view('dashboard', compact('products'));
@@ -304,6 +305,11 @@ class TwoFAController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
         $user = User::where("email", $email)->first();
+        if(is_null($user)){
+            return response()->json([
+                'resp' => "Error Login"
+            ], 406);    
+        }
         if ($user->rol == 3) {
             return response()->json([
                 'resp' => "Error Login"

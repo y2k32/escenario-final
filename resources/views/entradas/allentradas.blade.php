@@ -18,11 +18,11 @@
                                     @foreach ($entradas as $key=>$item)
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <td class="px-6 py-4">{{ ++$key }}</td>
-                                        <td class="px-6 py-4">{{ $item->Produc_id }}</td>
+                                        <td class="px-6 py-4">{{ $item->Nombre }}</td>
                                         <td class="px-6 py-4">{{ $item->Cantidad }}</td>
                                         <td class="px-6 py-4">{{ $item->Total }}</td>
                                         <td class="px-6 py-4">
-                                            <form method="POST" action="{{ route('show.salida', $item->id) }}">
+                                            <form method="POST" action="{{ route('show.entrada', ['id'=>$item->id,'idp'=>$item->Produc_id]) }}">
                                                 @csrf
                                                 <div class="">
                                                     <x-primary-button class="">

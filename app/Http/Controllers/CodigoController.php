@@ -26,7 +26,7 @@ class CodigoController extends Controller
         // pendiente ver con keneth los sockets
         $has_code = UserCode::where('user_id', Auth::user()->id)
             ->get();
-        $ipvpn = env('IP_VPN');
+        $ipvpn = "192.168.100.2:8000";
         $host = $_SERVER["HTTP_HOST"];
         if ($host == $ipvpn) {
             if (Auth::user()->rol == 1 || Auth::user()->rol == 2) {
@@ -64,7 +64,7 @@ class CodigoController extends Controller
                     return redirect($signed_url);
                 }
             }
-        }else{
+        } else {
             return redirect()->route('dashboard')->with('error', 'Credenciales invalidas para generar códigos de autorización.');
         }
         return redirect()->route('dashboard')->with('error', 'Ha ocurrido un error al generar códigos de autorización.');
@@ -83,6 +83,62 @@ class CodigoController extends Controller
                     'message' => $th->getMessage()
                 ], 400);
             }
+        }
+    }
+    public function CodeEmail(Request $request)
+    {
+        $users = User::where("status", "!=", "B")->get();
+        if (!is_null($users)) {
+            $encypt_key = env('CRYPT_KEY');
+            $codigoauto = strval(mt_rand(100000, 999999));
+            // A qui se genera el codigo, pero ocupamos el id del usuario que lo generara
+            // pendiente ver con keneth los sockets
+            $has_code = UserCode::where('user_id', Auth::user()->id)
+                ->get();
+            $ipvpn = "192.168.100.2:8000";
+            $host = $_SERVER["HTTP_HOST"];
+            if ($host == $ipvpn) {
+                if (Auth::user()->rol == 1 || Auth::user()->rol == 2) {
+                    if (count($has_code) == 0) {
+                        $code_gen = new UserCode();
+                        //$code_gen->user_id = Auth::user()->id;
+                        $code_gen->user_id = Auth::user()->id;
+                        $code_gen->rol = Auth::user()->rol;
+                        $code_gen->code = Hash::make($codigoauto);
+                        $code_gen->encrypt_code = Crypt::encryptString($codigoauto, $encypt_key);
+                        $code_gen->save();
+                    } else {
+                        $upt_code = UserCode::where("user_id", Auth::user()->id)->first();
+                        $upt_code->code = Hash::make($codigoauto);
+                        $upt_code->encrypt_code = Crypt::encryptString($codigoauto, $encypt_key);
+                        $upt_code->rol = Auth::user()->rol;
+                        $upt_code->save();
+                    }
+                    return view('codes.sendcode',["users" => $users, "codigo"=>$codigoauto]);
+                }
+            } else {
+                return redirect()->route('dashboard')->with('error', 'Credenciales invalidas para generar códigos de autorización.');
+            }
+            //return redirect()->route('autorized.code')->with('error', 'Ha ocurrido un error al generar códigos de autorización.');
+        } else {
+            return redirect()->route('dashboard')->with('error', 'No se encontraron usuarios, favar de contactar al administrador.');
+        }
+    }
+    public function sendCodeEmail(Request $request){
+        $users = User::where("status", "!=", "B")
+            	->where("id",$request->input("sl_user"))->first();
+        if (!is_null($users)) {
+            $codigo =$request->input('codigo');
+            // $signed_url = URL::temporarySignedRoute(
+            //     'show_code_v',
+            //     now()->addMinutes(15)
+            // );
+            $mail = new SendMail($codigo);
+            $get_email = $users->email;
+            Mail::to($get_email)->send($mail);
+            return redirect()->route('dashboard')->with('success', 'El código de autorización fue enviado al email seleccionado.');
+        }else{
+            return redirect()->route('dashboard')->with('error', 'El código de autorización no fue enviado al email seleccionado.');
         }
     }
 }

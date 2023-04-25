@@ -7,20 +7,12 @@
                     @csrf
                     <x-success-message class="mb-4" :errors="$errors"></x-success-message>
                     <x-text-input id="id" class="block mt-1 w-full" type="hidden" name="id" :value="$salida->id" />
-
-                    <!-- Select Product -->
+                    <x-text-input id="idp" class="block mt-1 w-full" type="hidden" name="idp" :value="$products->id" />
+                    <!-- Input Product -->
                     <div class="mt-4">
-                        <x-input-label for="sl_product" :value="__('Producto')" />
-                        <select class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" id="sl_product" aria-label="Default select example" name="sl_product" required="required">
-                            @foreach ($products as $item)
-                                @if($item->id == $salida->id)
-                                    <option value="{{ $item->id }}" selected>{{ $item->Nombre }}</option>
-                                @endif
-                                <option value="{{ $item->id }}">{{ $item->Nombre }}</option>
-                            @endforeach
-
-                        </select>
-                        <x-input-error :messages="$errors->get('sl_product')" class="mt-2" />
+                        <x-input-label for="pnombre" :value="__('Producto')" />
+                        <x-text-input id="pnombre" class="block mt-1 w-full" type="text" name="pnombre" :value="$products->Nombre" required readonly/>
+                        <x-input-error :messages="$errors->get('pnombre')" class="mt-2" />
                     </div>
 
                     <!-- Cantidad -->
